@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Village CSC - Digital Services Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        .hero-gradient { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card-hover { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .card-hover:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
+        .fade-in { animation: fadeIn 0.8s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .gradient-text { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .modern-shadow { box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1); }
+        .notification-badge { animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        .service-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+        .page-content { display: none; }
+        .page-content.active { display: block; }
+        .nav-link.active { color: #2563eb !important; border-bottom: 2px solid #2563eb; }
+        .admin-tab-btn.active { color: #2563eb !important; border-bottom-color: #2563eb !important; }
+        .admin-tab-content { display: none; }
+        .admin-tab-content.active { display: block; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Language Selector -->
+    <div class="fixed top-20 right-4 z-50">
+        <select id="languageSelector" onchange="changeLanguage()" class="bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm shadow-lg">
+            <option value="en">English</option>
+            <option value="mr">मराठी</option>
+        </select>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="bg-white/90 backdrop-blur-md shadow-lg fixed w-full top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <div class="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fas fa-building text-white text-lg"></i>
+                        </div>
+                        <span class="font-bold text-xl gradient-text" data-en="Village CSC" data-mr="गाव CSC">Village CSC</span>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#" class="nav-link text-gray-700 font-medium hover:text-blue-600 transition" onclick="showPage('home')" data-en="Home" data-mr="मुख्यपृष्ठ">Home</a>
+                    <a href="#" class="nav-link text-gray-700 font-medium hover:text-blue-600 transition" onclick="showPage('services')" data-en="Services" data-mr="सेवा">Services</a>
+                    <a href="#" class="nav-link text-gray-700 font-medium hover:text-blue-600 transition" onclick="showPage('request')" data-en="Request Service" data-mr="सेवा विनंती">Request Service</a>
+                    <a href="#" class="nav-link text-gray-700 font-medium hover:text-blue-600 transition" onclick="showPage('qa')" data-en="Q&A" data-mr="प्रश्न-उत्तर">Q&A</a>
+                    <a href="#" class="nav-link text-gray-700 font-medium hover:text-blue-600 transition" onclick="showPage('about')" data-en="About" data-mr="आमच्याबद्दल">About</a>
+                    <a href="#" class="nav-link text-gray-700 font-medium hover:text-blue-600 transition" onclick="showPage('contact')" data-en="Contact" data-mr="संपर्क">Contact</a>
+                    <button class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-full hover:shadow-lg transition" onclick="showPage('login')" data-en="Login" data-mr="लॉगिन">Login</button>
+                </div>
+                <div class="md:hidden flex items-center">
+                    <button class="text-gray-700" onclick="toggleMobileMenu()">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-white border-t border-gray-200">
+            <div class="px-4 py-2 space-y-2">
+                <a href="#" class="block px-3 py-2 text-gray-700 hover:text-blue-600" onclick="showPage('home'); toggleMobileMenu();" data-en="Home" data-mr="मुख्यपृष्ठ">Home</a>
+                <a href="#" class="block px-3 py-2 text-gray-700 hover:text-blue-600" onclick="showPage('services'); toggleMobileMenu();" data-en="Services" data-mr="सेवा">Services</a>
+                <a href="#" class="block px-3 py-2 text-gray-700 hover:text-blue-600" onclick="showPage('request'); toggleMobileMenu();" data-en="Request Service" data-mr="सेवा विनंती">Request Service</a>
+                <a href="#" class="block px-3 py-2 text-gray-700 hover:text-blue-600" onclick="showPage('qa'); toggleMobileMenu();" data-en="Q&A" data-mr="प्रश्न-उत्तर">Q&A</a>
+                <a href="#" class="block px-3 py-2 text-gray-700 hover:text-blue-600" onclick="showPage('about'); toggleMobileMenu();" data-en="About" data-mr="आमच्याबद्दल">About</a>
+                <a href="#" class="block px-3 py-2 text-gray-700 hover:text-blue-600" onclick="showPage('contact'); toggleMobileMenu();" data-en="Contact" data-mr="संपर्क">Contact</a>
+                <button class="w-full text-left px-3 py-2 text-blue-600 font-semibold" onclick="showPage('login'); toggleMobileMenu();" data-en="Login" data-mr="लॉगिन">Login</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Notification Button -->
+    <button id="notificationBtn" onclick="showNotifications()" class="fixed top-20 right-4 z-50 bg-gradient-to-r from-orange-500 to-red-500 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition notification-badge">
+        <i class="fas fa-bell"></i>
+        <span id="notificationCount" class="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
+    </button>
+
+    <!-- Notification Panel -->
+    <div id="notificationPanel" class="hidden fixed top-20 right-4 z-50 w-80 bg-white rounded-xl shadow-2xl border border-gray-200 max-h-96 overflow-y-auto">
+        <div class="p-4 border-b border-gray-200">
+            <h3 class="font-bold text-gray-800" data-en="What's New" data-mr="नवीन काय">What's New</h3>
+        </div>
+        <div id="notificationList" class="p-4 space-y-3">
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-3 rounded">
+                <h4 class="font-semibold text-blue-800" data-en="New Scheme Alert!" data-mr="नवीन योजना सूचना!">New Scheme Alert!</h4>
+                <p class="text-sm text-blue-700" data-en="PM Vishwakarma Yojana now available. Apply for skill development and financial assistance." data-mr="पीएम विश्वकर्मा योजना आता उपलब्ध. कौशल्य विकास आणि आर्थिक सहाय्यासाठी अर्ज करा.">PM Vishwakarma Yojana now available. Apply for skill development and financial assistance.</p>
+                <span class="text-xs text-gray-500">2 hours ago</span>
+            </div>
+            <div class="bg-green-50 border-l-4 border-green-500 p-3 rounded">
+                <h4 class="font-semibold text-green-800" data-en="Service Update" data-mr="सेवा अपडेट">Service Update</h4>
+                <p class="text-sm text-green-700" data-en="Ayushman Bharat card generation is now faster - get your card in 24 hours!" data-mr="आयुष्मान भारत कार्ड निर्मिती आता जलद - २४ तासात तुमचे कार्ड मिळवा!">Ayushman Bharat card generation is now faster - get your card in 24 hours!</p>
+                <span class="text-xs text-gray-500">1 day ago</span>
+            </div>
+            <div class="bg-purple-50 border-l-4 border-purple-500 p-3 rounded">
+                <h4 class="font-semibold text-purple-800" data-en="Digital Literacy Program" data-mr="डिजिटल साक्षरता कार्यक्रम">Digital Literacy Program</h4>
+                <p class="text-sm text-purple-700" data-en="Free computer training classes starting next week. Register now!" data-mr="पुढील आठवड्यात मोफत संगणक प्रशिक्षण वर्ग सुरू. आता नोंदणी करा!">Free computer training classes starting next week. Register now!</p>
+                <span class="text-xs text-gray-500">3 days ago</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Home Page -->
+    <div id="homePage" class="page-content active">
+        <!-- Hero Section -->
+        <section class="hero-gradient text-white pt-24 pb-20 relative overflow-hidden">
+            <div class="absolute inset-0 bg-black/20"></div>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="text-center fade-in">
+                    <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight" data-en="Digital Village Revolution" data-mr="डिजिटल गाव क्रांती">Digital Village Revolution</h1>
+                    <p class="text-xl md:text-2xl mb-8 opacity-90 max-w-3xl mx-auto" data-en="Your Gateway to All Government Services - Fast, Reliable, and Affordable" data-mr="सर्व सरकारी सेवांचे तुमचे प्रवेशद्वार - जलद, विश्वसनीय आणि परवडणारे">Your Gateway to All Government Services - Fast, Reliable, and Affordable</p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <button class="bg-white text-purple-600 px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-100 transition transform hover:scale-105" onclick="showPage('request')" data-en="Request Service Now" data-mr="आता सेवा विनंती करा">Request Service Now</button>
+                        <button class="border-2 border-white text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-white hover:text-purple-600 transition" onclick="showPage('services')" data-en="Explore Services" data-mr="सेवा एक्सप्लोर करा">Explore Services</button>
+                    </div>
+                </div>
+            </div>
+            <div class="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-gray-50 to-transparent"></div>
+        </section>
+
+        <!-- Photo Slider -->
+        <section class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-4" data-en="Our Modern CSC Center" data-mr="आमचे आधुनिक CSC केंद्र">Our Modern CSC Center</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto" data-en="State-of-the-art facilities with latest technology to serve you better" data-mr="तुम्हाला चांगली सेवा देण्यासाठी अत्याधुनिक तंत्रज्ञानासह अत्याधुनिक सुविधा">State-of-the-art facilities with latest technology to serve you better</p>
+                </div>
+                
+                <div class="relative overflow-hidden rounded-2xl shadow-2xl">
+                    <div id="photoSlider" class="flex transition-transform duration-700 ease-in-out">
+                        <div class="w-full flex-shrink-0 relative">
+                            <div class="h-96 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 flex items-center justify-center">
+                                <div class="text-center text-white">
+                                    <i class="fas fa-building text-8xl mb-6 opacity-90"></i>
+                                    <h3 class="text-3xl font-bold mb-4">Modern Infrastructure</h3>
+                                    <p class="text-xl opacity-90">Air-conditioned center with comfortable seating</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-full flex-shrink-0 relative">
+                            <div class="h-96 bg-gradient-to-br from-green-600 via-teal-600 to-blue-600 flex items-center justify-center">
+                                <div class="text-center text-white">
+                                    <i class="fas fa-laptop text-8xl mb-6 opacity-90"></i>
+                                    <h3 class="text-3xl font-bold mb-4">Latest Technology</h3>
+                                    <p class="text-xl opacity-90">High-speed internet and modern computers</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-full flex-shrink-0 relative">
+                            <div class="h-96 bg-gradient-to-br from-orange-600 via-red-600 to-pink-600 flex items-center justify-center">
+                                <div class="text-center text-white">
+                                    <i class="fas fa-users text-8xl mb-6 opacity-90"></i>
+                                    <h3 class="text-3xl font-bold mb-4">Expert Support</h3>
+                                    <p class="text-xl opacity-90">Trained professionals to assist you</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-full flex-shrink-0 relative">
+                            <div class="h-96 bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-600 flex items-center justify-center">
+                                <div class="text-center text-white">
+                                    <i class="fas fa-shield-alt text-8xl mb-6 opacity-90"></i>
+                                    <h3 class="text-3xl font-bold mb-4">Secure Services</h3>
+                                    <p class="text-xl opacity-90">Government certified and secure processes</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button onclick="previousSlide()" class="absolute left-6 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-md hover:bg-white/30 rounded-full p-4 shadow-lg transition">
+                        <i class="fas fa-chevron-left text-white text-xl"></i>
+                    </button>
+                    <button onclick="nextSlide()" class="absolute right-6 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-md hover:bg-white/30 rounded-full p-4 shadow-lg transition">
+                        <i class="fas fa-chevron-right text-white text-xl"></i>
+                    </button>
+                    
+                    <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-3">
+                        <button onclick="goToSlide(0)" class="slide-dot w-4 h-4 rounded-full bg-white transition"></button>
+                        <button onclick="goToSlide(1)" class="slide-dot w-4 h-4 rounded-full bg-white/50 transition"></button>
+                        <button onclick="goToSlide(2)" class="slide-dot w-4 h-4 rounded-full bg-white/50 transition"></button>
+                        <button onclick="goToSlide(3)" class="slide-dot w-4 h-4 rounded-full bg-white/50 transition"></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Services Highlight -->
+        <section class="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-4" data-en="Popular Services" data-mr="लोकप्रिय सेवा">Popular Services</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto" data-en="Most requested services by our community members" data-mr="आमच्या समुदायाच्या सदस्यांकडून सर्वाधिक मागणी केलेल्या सेवा">Most requested services by our community members</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="card-hover bg-white p-8 rounded-2xl text-center modern-shadow">
+                        <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-id-card text-2xl text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-4" data-en="Identity Services" data-mr="ओळख सेवा">Identity Services</h3>
+                        <p class="text-gray-600" data-en="Aadhar, PAN Card, Voter ID and other identity documents" data-mr="आधार, पॅन कार्ड, मतदार ओळखपत्र आणि इतर ओळख कागदपत्रे">Aadhar, PAN Card, Voter ID and other identity documents</p>
+                    </div>
+                    <div class="card-hover bg-white p-8 rounded-2xl text-center modern-shadow">
+                        <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-teal-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-hand-holding-heart text-2xl text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-4" data-en="Government Schemes" data-mr="सरकारी योजना">Government Schemes</h3>
+                        <p class="text-gray-600" data-en="PM Kisan, Ayushman Bharat, and welfare scheme applications" data-mr="पीएम किसान, आयुष्मान भारत आणि कल्याणकारी योजना अर्ज">PM Kisan, Ayushman Bharat, and welfare scheme applications</p>
+                    </div>
+                    <div class="card-hover bg-white p-8 rounded-2xl text-center modern-shadow">
+                        <div class="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-globe text-2xl text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-4" data-en="Digital Services" data-mr="डिजिटल सेवा">Digital Services</h3>
+                        <p class="text-gray-600" data-en="Online applications, digital payments, and e-governance services" data-mr="ऑनलाइन अर्ज, डिजिटल पेमेंट आणि ई-गव्हर्नन्स सेवा">Online applications, digital payments, and e-governance services</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid md:grid-cols-4 gap-8 text-center">
+                    <div class="fade-in">
+                        <div class="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">2500+</div>
+                        <div class="text-gray-600 font-medium" data-en="Happy Customers" data-mr="समाधान ग्राहक">Happy Customers</div>
+                    </div>
+                    <div class="fade-in">
+                        <div class="text-5xl font-bold bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent mb-2">50+</div>
+                        <div class="text-gray-600 font-medium" data-en="Services Available" data-mr="उपलब्ध सेवा">Services Available</div>
+                    </div>
+                    <div class="fade-in">
+                        <div class="text-5xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">99.8%</div>
+                        <div class="text-gray-600 font-medium" data-en="Success Rate" data-mr="यश दर">Success Rate</div>
+                    </div>
+                    <div class="fade-in">
+                        <div class="text-5xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent mb-2">24/7</div>
+                        <div class="text-gray-600 font-medium" data-en="Online Support" data-mr="ऑनलाइन सपोर्ट">Online Support</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Services Page -->
+    <div id="servicesPage" class="page-content">
+        <section class="pt-24 pb-20 bg-gradient-to-br from-blue-50 to-purple-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16 fade-in">
+                    <h1 class="text-5xl font-bold text-gray-800 mb-6" data-en="Complete Digital Services" data-mr="संपूर्ण डिजिटल सेवा">Complete Digital Services</h1>
+                    <p class="text-xl text-gray-600 max-w-3xl mx-auto" data-en="From government documents to digital payments - we provide all services under one roof" data-mr="सरकारी कागदपत्रांपासून डिजिटल पेमेंटपर्यंत - आम्ही एकाच छताखाली सर्व सेवा प्रदान करतो">From government documents to digital payments - we provide all services under one roof</p>
+                </div>
+                
+                <div class="service-grid">
+                    <!-- Aadhar Services -->
+                    <div class="card-hover bg-white rounded-2xl p-8 modern-shadow">
+                        <div class="flex items-center mb-6">
+                            <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center mr-4">
+                                <i class="fas fa-id-card text-white"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800" data-en="Aadhar Services" data-mr="आधार सेवा">Aadhar Services</h3>
+                        </div>
+                        <ul class="text-gray-600 space-y-2 mb-6">
+                            <li>• New Aadhar Enrollment</li>
+                            <li>• Aadhar Update/Correction</li>
+                            <li>• PVC Card Printing</li>
+                            <li>• Mobile Number Update</li>
+                            <li>• Address Change</li>
+                        </ul>
+                        <button class="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition" onclick="showPage('request')">Request Service</button>
+                    </div>
+
+                    <!-- PAN Card -->
+                    <div class="card-hover bg-white rounded-2xl p-8 modern-shadow">
+                        <div class="flex items-center mb-6">
+                            <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-teal-500 rounded-xl flex items-center justify-center mr-4">
+                                <i class="fas fa-credit-card text-white"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800" data-en="PAN Card Services" data-mr="पॅन कार्ड सेवा">PAN Card Services</h3>
+                        </div>
+                        <ul class="text-gray-600 space-y-2 mb-6">
+                            <li>• New PAN Application</li>
+                            <li>• PAN Correction</li>
+                            <li>• Duplicate PAN Card</li>
+                            <li>• PAN Status Check</li>
+                            <li>• PAN Linking Services</li>
+                        </ul>
+                        <button class="w-full bg-gradient-to-r from-green-500 to-teal-500 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition" onclick="showPage('request')">Request Service</button>
+                    </div>
+
+                    <!-- Passport Services -->
+                    <div class="card-hover bg-white rounded-2xl p-8 modern-shadow">
+                        <div class="flex items-center mb-6">
+                            <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mr-4">
+                                <i class="fas fa-passport text-white"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800" data-en="Passport Services" data-mr="पासपोर्ट सेवा">Passport Services</h3>
+                        </div>
+                        <ul class="text-gray-600 space-y-2 mb-6">
+                            <li>• Fresh Passport Application</li>
+                            <li>• Passport Renewal</li>
+                            <li>• Tatkal Passport</li>
+                            <li>• Police Verification</li>
+                            <li>• Passport Status Tracking</li>
+                        </ul>
+                        <button class="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition" onclick="showPage('request')">Request Service</button>
+                    </div>
+
+                    <!-- Government Schemes -->
+                    <div class="card-hover bg-white rounded-2xl p-8 modern-shadow">
+                        <div class="flex items-center mb-6">
+                            <div class="w-12 h-12 bg-gradient-to-r from-green-600 to-emerald-500 rounded-xl flex items-center justify-center mr-4">
+                                <i class="fas fa-hand-holding-heart text-white"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800" data-en="Government Schemes" data-mr="सरकारी योजना">Government Schemes</h3>
+                        </div>
+                        <ul class="text-gray-600 space-y-2 mb-6">
+                            <li>• PM Kisan Samman Nidhi</li>
+                            <li>• Ayushman Bharat</li>
+                            <li>• PM Vishwakarma Yojana</li>
+                            <li>• Pradhan Mantri Awas Yojana</li>
+                            <li>• Kisan Credit Card</li>
+                        </ul>
+                        <button class="w-full bg-gradient-to-r from-green-600 to-emerald-500 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition" onclick="showPage('request')">Request Service</button>
+                    </div>
+
+                    <!-- Digital Services -->
+                    <div class="card-hover bg-white rounded-2xl p-8 modern-shadow">
+                        <div class="flex items-center mb-6">
+                            <div class="w-12 h-12 bg-gradient-to-r from-indigo-500 to-blue-500 rounded-xl flex items-center justify-center mr-4">
+                                <i class="fas fa-laptop text-white"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800" data-en="Digital Services" data-mr="डिजिटल सेवा">Digital Services</h3>
+                        </div>
+                        <ul class="text-gray-600 space-y-2 mb-6">
+                            <li>• Digital Payments</li>
+                            <li>• Bill Payments</li>
+                            <li>• Mobile Recharge</li>
+                            <li>• Insurance Services</li>
+                            <li>• Banking Services</li>
+                        </ul>
+                        <button class="w-full bg-gradient-to-r from-indigo-500 to-blue-500 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition" onclick="showPage('request')">Request Service</button>
+                    </div>
+
+                    <!-- Print Services -->
+                    <div class="card-hover bg-white rounded-2xl p-8 modern-shadow">
+                        <div class="flex items-center mb-6">
+                            <div class="w-12 h-12 bg-gradient-to-r from-gray-600 to-gray-500 rounded-xl flex items-center justify-center mr-4">
+                                <i class="fas fa-print text-white"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800" data-en="Print & Scan Services" data-mr="प्रिंट आणि स्कॅन सेवा">Print & Scan Services</h3>
+                        </div>
+                        <ul class="text-gray-600 space-y-2 mb-6">
+                            <li>• Document Printing</li>
+                            <li>• Photocopying</li>
+                            <li>• Document Scanning</li>
+                            <li>• Lamination</li>
+                            <li>• Binding Services</li>
+                        </ul>
+                        <button class="w-full bg-gradient-to-r from-gray-600 to-gray-500 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition" onclick="showPage('request')">Request Service</button>
+                    </div>
+                </div>
+
+                <div class="text-center mt-16">
+                    <button class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-12 py-4 rounded-full text-lg font-semibold hover:shadow-xl transition transform hover:scale-105" onclick="showPage('request')" data-en="Request Any Service Now" data-mr="आता कोणतीही सेवा विनंती करा">Request Any Service Now</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Request Service Page -->
+    <div id="requestPage" class="page-content">
+        <section class="pt-24 pb-20 bg-gradient-to-br from-blue-50 to-purple-50">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12 fade-in">
+                    <h1 class="text-5xl font-bold text-gray-800 mb-6" data-en="Request Service Online" data-mr="ऑनलाइन सेवा विनंती करा">Request Service Online</h1>
+                    <p class="text-xl text-gray-600" data-en="Fill out the form below and track your request status in real-time" data-mr="खालील फॉर्म भरा आणि तुमच्या विनंतीची स्थिती रिअल-टाइममध्ये ट्रॅक करा">Fill out the form below and track your request status in real-time</p>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-2xl p-8 md:p-12">
+                    <form id="serviceRequestForm" onsubmit="submitRequest(event)">
+                        <div class="grid md:grid-cols-2 gap-8 mb-8">
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-3" data-en="Full Name *" data-mr="पूर्ण नाव *">Full Name *</label>
+                                <input type="text" id="fullName" required class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-3" data-en="Mobile Number *" data-mr="मोबाइल नंबर *">Mobile Number *</label>
+                                <input type="tel" id="mobile" required pattern="[0-9]{10}" class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
+                            </div>
+                        </div>
+
+                        <div class="mb-8">
+                            <label class="block text-gray-700 font-semibold mb-3" data-en="Email Address" data-mr="ईमेल पत्ता">Email Address</label>
+                            <input type="email" id="email" class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
+                        </div>
+
+                        <div class="mb-8">
+                            <label class="block text-gray-700 font-semibold mb-3" data-en="Service Needed *" data-mr="आवश्यक सेवा *">Service Needed *</label>
+                            <select id="serviceType" required class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
+                                <option value="" data-en="Select a service" data-mr="सेवा निवडा">Select a service</option>
+                                <option value="aadhar" data-en="Aadhar Services" data-mr="आधार सेवा">Aadhar Services</option>
+                                <option value="pan" data-en="PAN Card" data-mr="पॅन कार्ड">PAN Card</option>
+                                <option value="passport" data-en="Passport Services" data-mr="पासपोर्ट सेवा">Passport Services</option>
+                                <option value="voter" data-en="Voter ID" data-mr="मतदार ओळखपत्र">Voter ID</option>
+                                <option value="schemes" data-en="Government Schemes" data-mr="सरकारी योजना">Government Schemes</option>
+                                <option value="digital" data-en="Digital Services" data-mr="डिजिटल सेवा">Digital Services</option>
+                                <option value="print" data-en="Print & Scan Services" data-mr="प्रिंट आणि स्कॅन सेवा">Print & Scan Services</option>
+                                <option value="other" data-en="Other" data-mr="इतर">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-8">
+                            <label class="block text-gray-700 font-semibold mb-3" data-en="Additional Details" data-mr="अतिरिक्त तपशील">Additional Details</label>
+                            <textarea id="details" rows="5" class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" placeholder="Please provide any additional information about your request..."></textarea>
+                        </div>
+
+                        <div class="mb-8">
+                            <label class="flex items-center">
+                                <input type="checkbox" required class="mr-3 w-5 h-5">
+                                <span class="text-gray-700" data-en="I agree to the terms and conditions and privacy policy" data-mr="मी अटी आणि शर्ती आणि गोपनीयता धोरणाशी सहमत आहे">I agree to the terms and conditions and privacy policy</span>
+                            </label>
+                        </div>
+
+                        <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-xl text-lg font-semibold hover:shadow-xl transition transform hover:scale-105" data-en="Submit Request" data-mr="विनंती सबमिट करा">Submit Request</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Q&A Page -->
+    <div id="qaPage" class="page-content">
+        <section class="pt-24 pb-20 bg-gradient-to-br from-blue-50 to-purple-50">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16 fade-in">
+                    <h1 class="text-5xl font-bold text-gray-800 mb-6" data-en="Questions & Answers" data-mr="प्रश्न आणि उत्तरे">Questions & Answers</h1>
+                    <p class="text-xl text-gray-600" data-en="Ask your questions and get answers from our expert team" data-mr="तुमचे प्रश्न विचारा आणि आमच्या तज्ञ टीमकडून उत्तरे मिळवा">Ask your questions and get answers from our expert team</p>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-12">
+                    <!-- Ask Question Form -->
+                    <div class="bg-white rounded-2xl shadow-2xl p-8">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-6" data-en="Ask a Question" data-mr="प्रश्न विचारा">Ask a Question</h2>
+                        <form id="questionForm" onsubmit="submitQuestion(event)">
+                            <div class="mb-6">
+                                <label class="block text-gray-700 font-semibold mb-3" data-en="Your Name *" data-mr="तुमचे नाव *">Your Name *</label>
+                                <input type="text" id="questionName" required class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
+                            </div>
+                            <div class="mb-6">
+                                <label class="block text-gray-700 font-semibold mb-3" data-en="Mobile Number *" data-mr="मोबाइल नंबर *">Mobile Number *</label>
+                                <input type="tel" id="questionMobile" required class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
+                            </div>
+                            <div class="mb-6">
+                                <label class="block text-gray-700 font-semibold mb-3" data-en="Your Question *" data-mr="तुमचा प्रश्न *">Your Question *</label>
+                                <textarea id="questionText" required rows="4" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" placeholder="Type your question here..."></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition" data-en="Submit Question" data-mr="प्रश्न सबमिट करा">Submit Question</button>
+                        </form>
+                    </div>
+
+                    <!-- Recent Q&A -->
+                    <div class="bg-white rounded-2xl shadow-2xl p-8">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-6" data-en="Recent Questions & Answers" data-mr="अलीकडील प्रश्न आणि उत्तरे">Recent Questions & Answers</h2>
+                        <div id="qaList" class="space-y-6 max-h-96 overflow-y-auto">
+                            <div class="border-l-4 border-blue-500 pl-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h4 class="font-semibold text-gray-800">Amit Kumar</h4>
+                                    <span class="text-sm text-gray-500">2 hours ago</span>
+                                </div>
+                                <p class="text-gray-600 mb-3"><strong>Q:</strong> How long does it take to get a new Aadhar card?</p>
+                                <div class="bg-green-50 p-3 rounded-lg">
+                                    <p class="text-green-800"><strong>Admin:</strong> New Aadhar enrollment typically takes 60-90 days. You can track your status online using the enrollment number.</p>
+                                </div>
+                            </div>
+
+                            <div class="border-l-4 border-purple-500 pl-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h4 class="font-semibold text-gray-800">Priya Sharma</h4>
+                                    <span class="text-sm text-gray-500">5 hours ago</span>
+                                </div>
+                                <p class="text-gray-600 mb-3"><strong>Q:</strong> What documents are needed for passport application?</p>
+                                <div class="bg-green-50 p-3 rounded-lg">
+                                    <p class="text-green-800"><strong>Admin:</strong> You need birth certificate, address proof, identity proof, and photographs. We can help you with the complete application process.</p>
+                                </div>
+                            </div>
+
+                            <div class="border-l-4 border-orange-500 pl-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h4 class="font-semibold text-gray-800">Rajesh Patel</h4>
+                                    <span class="text-sm text-gray-500">1 day ago</span>
+                                </div>
+                                <p class="text-gray-600 mb-3"><strong>Q:</strong> Can I apply for PM Kisan scheme online?</p>
+                                <div class="bg-blue-50 p-3 rounded-lg">
+                                    <p class="text-blue-800"><strong>Pending:</strong> Your question is being reviewed by our admin team.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- About Page -->
+    <div id="aboutPage" class="page-content">
+        <section class="pt-24 pb-20 bg-white">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16 fade-in">
+                    <h1 class="text-5xl font-bold text-gray-800 mb-6" data-en="About Our CSC Center" data-mr="आमच्या CSC केंद्राबद्दल">About Our CSC Center</h1>
+                    <p class="text-xl text-gray-600 max-w-3xl mx-auto" data-en="Empowering rural communities through digital services and bridging the digital divide" data-mr="डिजिटल सेवांद्वारे ग्रामीण समुदायांना सशक्त बनवणे आणि डिजिटल विभाजन कमी करणे">Empowering rural communities through digital services and bridging the digital divide</p>
+                </div>
+
+                <!-- CSC Operator Info -->
+                <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-12 mb-16">
+                    <div class="flex flex-col lg:flex-row items-center">
+                        <div class="mb-8 lg:mb-0 lg:mr-12">
+                            <div class="w-40 h-40 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-user text-6xl text-white"></i>
+                            </div>
+                        </div>
+                        <div class="text-center lg:text-left flex-1">
+                            <h2 class="text-3xl font-bold text-gray-800 mb-3">Rajesh Kumar</h2>
+                            <p class="text-xl text-blue-600 font-semibold mb-6" data-en="CSC Operator & Village Level Entrepreneur" data-mr="CSC ऑपरेटर आणि गाव पातळीवरील उद्योजक">CSC Operator & Village Level Entrepreneur</p>
+                            <p class="text-gray-600 mb-6 text-lg leading-relaxed" data-en="With over 7 years of experience in digital services, I am committed to bringing government services closer to our rural community. Certified by CSC e-Governance Services India Limited and trained in latest digital technologies." data-mr="डिजिटल सेवांमध्ये 7 वर्षांहून अधिक अनुभवासह, मी आमच्या ग्रामीण समुदायाच्या जवळ सरकारी सेवा आणण्यासाठी वचनबद्ध आहे. CSC ई-गव्हर्नन्स सर्व्हिसेस इंडिया लिमिटेडद्वारे प्रमाणित आणि नवीनतम डिजिटल तंत्रज्ञानामध्ये प्रशिक्षित.">With over 7 years of experience in digital services, I am committed to bringing government services closer to our rural community. Certified by CSC e-Governance Services India Limited and trained in latest digital technologies.</p>
+                            <div class="flex flex-wrap justify-center lg:justify-start gap-3">
+                                <span class="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium">Certified Operator</span>
+                                <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium">7+ Years Experience</span>
+                                <span class="bg-purple-100 text-purple-800 px-4 py-2 rounded-full text-sm font-medium">Digital Expert</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mission & Vision -->
+                <div class="grid lg:grid-cols-2 gap-12 mb-16">
+                    <div class="bg-white border-2 border-gray-100 rounded-2xl p-8 modern-shadow">
+                        <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mb-6">
+                            <i class="fas fa-bullseye text-2xl text-white"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4" data-en="Our Mission" data-mr="आमचे ध्येय">Our Mission</h3>
+                        <p class="text-gray-600 leading-relaxed" data-en="To bridge the digital divide by providing accessible, affordable, and reliable government services to rural communities, empowering citizens with digital literacy and convenience while ensuring transparency and efficiency in service delivery." data-mr="ग्रामीण समुदायांना प्रवेशयोग्य, परवडणारी आणि विश्वसनीय सरकारी सेवा प्रदान करून डिजिटल विभाजन कमी करणे, नागरिकांना डिजिटल साक्षरता आणि सोयीने सशक्त बनवणे आणि सेवा वितरणामध्ये पारदर्शकता आणि कार्यक्षमता सुनिश्चित करणे.">To bridge the digital divide by providing accessible, affordable, and reliable government services to rural communities, empowering citizens with digital literacy and convenience while ensuring transparency and efficiency in service delivery.</p>
+                    </div>
+                    <div class="bg-white border-2 border-gray-100 rounded-2xl p-8 modern-shadow">
+                        <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-teal-500 rounded-2xl flex items-center justify-center mb-6">
+                            <i class="fas fa-eye text-2xl text-white"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4" data-en="Our Vision" data-mr="आमची दृष्टी">Our Vision</h3>
+                        <p class="text-gray-600 leading-relaxed" data-en="To create a digitally empowered village where every citizen can access government services seamlessly, contributing to the vision of Digital India and making our community a model for rural digital transformation." data-mr="एक डिजिटली सशक्त गाव तयार करणे जेथे प्रत्येक नागरिक सरकारी सेवांमध्ये अखंडपणे प्रवेश करू शकेल, डिजिटल इंडियाच्या दृष्टीकोनात योगदान देऊन आणि आमच्या समुदायाला ग्रामीण डिजिटल परिवर्तनासाठी एक आदर्श बनवणे.">To create a digitally empowered village where every citizen can access government services seamlessly, contributing to the vision of Digital India and making our community a model for rural digital transformation.</p>
+                    </div>
+                </div>
+
+                <!-- Center Information -->
+                <div class="bg-white border-2 border-gray-100 rounded-2xl p-12 modern-shadow">
+                    <h3 class="text-3xl font-bold text-gray-800 mb-8 text-center" data-en="Center Information" data-mr="केंद्र माहिती">Center Information</h3>
+                    <div class="grid lg:grid-cols-2 gap-12">
+                        <div>
+                            <h4 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+                                <i class="fas fa-clock text-blue-600 mr-3"></i>
+                                <span data-en="Operating Hours" data-mr="कार्य तास">Operating Hours</span>
+                            </h4>
+                            <div class="space-y-3 text-gray-600">
+                                <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                                    <span data-en="Monday - Friday:" data-mr="सोमवार - शुक्रवार:">Monday - Friday:</span>
+                                    <span class="font-semibold">9:00 AM - 6:00 PM</span>
+                                </div>
+                                <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                                    <span data-en="Saturday:" data-mr="शनिवार:">Saturday:</span>
+                                    <span class="font-semibold">9:00 AM - 4:00 PM</span>
+                                </div>
+                                <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                                    <span data-en="Sunday:" data-mr="रविवार:">Sunday:</span>
+                                    <span class="font-semibold text-red-600" data-en="Closed" data-mr="बंद">Closed</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+                                <i class="fas fa-cogs text-green-600 mr-3"></i>
+                                <span data-en="Services Available" data-mr="उपलब्ध सेवा">Services Available</span>
+                            </h4>
+                            <ul class="text-gray-600 space-y-3">
+                                <li class="flex items-center p-2">
+                                    <i class="fas fa-check-circle text-green-600 mr-3"></i>
+                                    <span data-en="Government Document Services" data-mr="सरकारी कागदपत्र सेवा">Government Document Services</span>
+                                </li>
+                                <li class="flex items-center p-2">
+                                    <i class="fas fa-check-circle text-green-600 mr-3"></i>
+                                    <span data-en="Digital Payment Solutions" data-mr="डिजिटल पेमेंट सोल्यूशन्स">Digital Payment Solutions</span>
+                                </li>
+                                <li class="flex items-center p-2">
+                                    <i class="fas fa-check-circle text-green-600 mr-3"></i>
+                                    <span data-en="Online Form Filling" data-mr="ऑनलाइन फॉर्म भरणे">Online Form Filling</span>
+                                </li>
+                                <li class="flex items-center p-2">
+                                    <i class="fas fa-check-circle text-green-600 mr-3"></i>
+                                    <span data-en="Print & Scan Services" data-mr="प्रिंट आणि स्कॅन सेवा">Print & Scan Services</span>
+                                </li>
+                                <li class="flex items-center p-2">
+                                    <i class="fas fa-check-circle text-green-600 mr-3"></i>
+                                    <span data-en="Digital Literacy Training" data-mr="डिजिटल साक्षरता प्रशिक्षण">Digital Literacy Training</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Contact Page -->
+    <div id="contactPage" class="page-content">
+        <section class="pt-24 pb-20 bg-gradient-to-br from-blue-50 to-purple-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16 fade-in">
+                    <h1 class="text-5xl font-bold text-gray-800 mb-6" data-en="Get In Touch" data-mr="संपर्कात रहा">Get In Touch</h1>
+                    <p class="text-xl text-gray-600 max-w-3xl mx-auto" data-en="We're here to help you with all your digital service needs. Reach out to us anytime!" data-mr="आम्ही तुमच्या सर्व डिजिटल सेवा गरजांसाठी येथे आहोत. कधीही आमच्याशी संपर्क साधा!">We're here to help you with all your digital service needs. Reach out to us anytime!</p>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-16">
+                    <!-- Contact Information -->
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-800 mb-8" data-en="Contact Information" data-mr="संपर्क माहिती">Contact Information</h2>
+                        
+                        <div class="space-y-8 mb-12">
+                            <div class="flex items-center p-6 bg-white rounded-2xl modern-shadow">
+                                <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-teal-500 rounded-2xl flex items-center justify-center mr-6">
+                                    <i class="fas fa-phone text-2xl text-white"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-semibold text-gray-800" data-en="Phone" data-mr="फोन">Phone</h3>
+                                    <p class="text-gray-600 text-lg">+91 98765 43210</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center p-6 bg-white rounded-2xl modern-shadow">
+                                <div class="w-16 h-16 bg-gradient-to-r from-green-600 to-emerald-500 rounded-2xl flex items-center justify-center mr-6">
+                                    <i class="fab fa-whatsapp text-2xl text-white"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-semibold text-gray-800">WhatsApp</h3>
+                                    <p class="text-gray-600 text-lg">+91 98765 43210</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center p-6 bg-white rounded-2xl modern-shadow">
+                                <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mr-6">
+                                    <i class="fas fa-envelope text-2xl text-white"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-semibold text-gray-800" data-en="Email" data-mr="ईमेल">Email</h3>
+                                    <p class="text-gray-600 text-lg">villagecsc@gmail.com</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center p-6 bg-white rounded-2xl modern-shadow">
+                                <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mr-6">
+                                    <i class="fas fa-map-marker-alt text-2xl text-white"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-semibold text-gray-800" data-en="Address" data-mr="पत्ता">Address</h3>
+                                    <p class="text-gray-600 text-lg">Main Road, Near Post Office<br>Village Name, District - 123456</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Contact Buttons -->
+                        <div class="space-y-4">
+                            <button class="w-full bg-gradient-to-r from-green-600 to-emerald-500 text-white py-4 rounded-xl font-semibold hover:shadow-xl transition transform hover:scale-105 flex items-center justify-center text-lg">
+                                <i class="fab fa-whatsapp mr-3 text-xl"></i>
+                                <span data-en="Chat on WhatsApp" data-mr="WhatsApp वर चॅट करा">Chat on WhatsApp</span>
+                            </button>
+                            <button class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-xl font-semibold hover:shadow-xl transition transform hover:scale-105 flex items-center justify-center text-lg">
+                                <i class="fas fa-phone mr-3 text-xl"></i>
+                                <span data-en="Call Now" data-mr="आता कॉल करा">Call Now</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Contact Form -->
+                    <div class="bg-white rounded-2xl shadow-2xl p-8">
+                        <h2 class="text-3xl font-bold text-gray-800 mb-8" data-en="Send us a Message" data-mr="आम्हाला संदेश पाठवा">Send us a Message</h2>
+                        
+                        <form id="contactForm" onsubmit="submitContact(event)">
+                            <div class="mb-6">
+                                <label class="block text-gray-700 font-semibold mb-3" data-en="Name *" data-mr="नाव *">Name *</label>
+                                <input type="text" required class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
+                            </div>
+
+                            <div class="mb-6">
+                                <label class="block text-gray-700 font-semibold mb-3" data-en="Email *" data-mr="ईमेल *">Email *</label>
+                                <input type="email" required class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
+                            </div>
+
+                            <div class="mb-6">
+                                <label class="block text-gray-700 font-semibold mb-3" data-en="Phone" data-mr="फोन">Phone</label>
+                                <input type="tel" class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
+                            </div>
+
+                            <div class="mb-6">
+                                <label class="block text-gray-700 font-semibold mb-3" data-en="Subject *" data-mr="विषय *">Subject *</label>
+                                <select required class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
+                                    <option value="" data-en="Select subject" data-mr="विषय निवडा">Select subject</option>
+                                    <option value="service" data-en="Service Inquiry" data-mr="सेवा चौकशी">Service Inquiry</option>
+                                    <option value="complaint" data-en="Complaint" data-mr="तक्रार">Complaint</option>
+                                    <option value="suggestion" data-en="Suggestion" data-mr="सूचना">Suggestion</option>
+                                    <option value="other" data-en="Other" data-mr="इतर">Other</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-8">
+                                <label class="block text-gray-700 font-semibold mb-3" data-en="Message *" data-mr="संदेश *">Message *</label>
+                                <textarea required rows="5" class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" placeholder="Your message here..."></textarea>
+                            </div>
+
+                            <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-xl text-lg font-semibold hover:shadow-xl transition transform hover:scale-105" data-en="Send Message" data-mr="संदेश पाठवा">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Login Page -->
+    <div id="loginPage" class="page-content">
+        <section class="pt-24 pb-20 bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen flex items-center">
+            <div class="max-w-md mx-auto px-4 sm:px-6 lg:px-8 w-full">
+                <div class="bg-white rounded-2xl shadow-2xl p-8">
+                    <div class="text-center mb-8">
+                        <div class="w-20 h-20 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-user-circle text-3xl text-white"></i>
+                        </div>
+                        <h1 class="text-3xl font-bold text-gray-800" data-en="Welcome Back" data-mr="परत स्वागत">Welcome Back</h1>
+                        <p class="text-gray-600" data-en="Login to access your dashboard" data-mr="तुमच्या डॅशबोर्डमध्ये प्रवेश करण्यासाठी लॉगिन करा">Login to access your dashboard</p>
+                    </div>
+
+                    <form id="loginForm" onsubmit="handleLogin(event)">
+                        <div class="mb-6">
+                            <label class="block text-gray-700 font-semibold mb-3" data-en="Email or Phone" data-mr="ईमेल किंवा फोन">Email or Phone</label>
+                            <input type="text" id="loginUsername" required class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
+                        </div>
+
+                        <div class="mb-8">
+                            <label class="block text-gray-700 font-semibold mb-3" data-en="Password" data-mr="पासवर्ड">Password</label>
+                            <input type="password" id="loginPassword" required class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
+                        </div>
+
+                        <div class="flex items-center justify-between mb-8">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-3 w-5 h-5">
+                                <span class="text-gray-700" data-en="Remember me" data-mr="मला लक्षात ठेवा">Remember me</span>
+                            </label>
+                            <a href="#" class="text-blue-600 hover:text-blue-700 font-medium" data-en="Forgot password?" data-mr="पासवर्ड विसरलात?">Forgot password?</a>
+                        </div>
+
+                        <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-xl text-lg font-semibold hover:shadow-xl transition transform hover:scale-105 mb-6" data-en="Login" data-mr="लॉगिन">Login</button>
+
+                        <div class="text-center">
+                            <span class="text-gray-600" data-en="Don't have an account? " data-mr="खाते नाही? ">Don't have an account? </span>
+                            <button type="button" class="text-blue-600 hover:text-blue-700 font-semibold" onclick="showPage('register')" data-en="Register here" data-mr="येथे नोंदणी करा">Register here</button>
+                        </div>
+                    </form>
+
+                    <!-- Admin Login -->
+                    <div class="mt-8 pt-6 border-t border-gray-200">
+                        <button class="w-full bg-gradient-to-r from-gray-600 to-gray-700 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition" onclick="showAdminLogin()" data-en="Admin Login" data-mr="अॅडमिन लॉगिन">Admin Login</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Register Page -->
+    <div id="registerPage" class="page-content">
+        <section class="pt-24 pb-20 bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen flex items-center">
+            <div class="max-w-md mx-auto px-4 sm:px-6 lg:px-8 w-full">
+                <div class="bg-white rounded-2xl shadow-2xl p-8">
+                    <div class="text-center mb-8">
+                        <div class="w-20 h-20 bg-gradient-to-r from-green-600 to-teal-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-user-plus text-3xl text-white"></i>
+                        </div>
+                        <h1 class="text-3xl font-bold text-gray-800" data-en="Create Account" data-mr="खाते तयार करा">Create Account</h1>
+                        <p class="text-gray-600" data-en="Join us to access digital services" data-mr="डिजिटल सेवांमध्ये प्रवेश करण्यासाठी आमच्यात सामील व्हा">Join us to access digital services</p>
+                    </div>
+
+                    <form id="registerForm" onsubmit="handleRegister(event)">
+                        <div class="mb-6">
+                            <label class="block text-gray-700 font-semibold mb-3" data-en="Full Name" data-mr="पूर्ण नाव">Full Name</label>
+                            <input type="text" required class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition">
+                        </div>
+
+                        <div class="mb-6">
+                            <label class="block text-gray-700 font-semibold mb-3" data-en="Email Address" data-mr="ईमेल पत्ता">Email Address</label>
+                            <input type="email" required class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition">
+                        </div>
+
+                        <div class="mb-6">
+                            <label class="block text-gray-700 font-semibold mb-3" data-en="Phone Number" data-mr="फोन नंबर">Phone Number</label>
+                            <input type="tel" required class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition">
+                        </div>
+
+                        <div class="mb-6">
+                            <label class="block text-gray-700 font-semibold mb-3" data-en="Password" data-mr="पासवर्ड">Password</label>
+                            <input type="password" required class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition">
+                        </div>
+
+                        <div class="mb-8">
+                            <label class="block text-gray-700 font-semibold mb-3" data-en="Confirm Password" data-mr="पासवर्डची पुष्टी करा">Confirm Password</label>
+                            <input type="password" required class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition">
+                        </div>
+
+                        <div class="mb-8">
+                            <label class="flex items-center">
+                                <input type="checkbox" required class="mr-3 w-5 h-5">
+                                <span class="text-gray-700" data-en="I agree to the Terms of Service and Privacy Policy" data-mr="मी सेवा अटी आणि गोपनीयता धोरणाशी सहमत आहे">I agree to the Terms of Service and Privacy Policy</span>
+                            </label>
+                        </div>
+
+                        <button type="submit" class="w-full bg-gradient-to-r from-green-600 to-teal-600 text-white py-4 rounded-xl text-lg font-semibold hover:shadow-xl transition transform hover:scale-105 mb-6" data-en="Create Account" data-mr="खाते तयार करा">Create Account</button>
+
+                        <div class="text-center">
+                            <span class="text-gray-600" data-en="Already have an account? " data-mr="आधीच खाते आहे? ">Already have an account? </span>
+                            <button type="button" class="text-green-600 hover:text-green-700 font-semibold" onclick="showPage('login')" data-en="Login here" data-mr="येथे लॉगिन करा">Login here</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" class="page-content">
+        <section class="pt-24 pb-20 bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center mb-12">
+                    <div>
+                        <h1 class="text-4xl font-bold text-gray-800">Admin Dashboard</h1>
+                        <p class="text-gray-600 mt-2">Manage your CSC center efficiently</p>
+                    </div>
+                    <button class="bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition" onclick="logout()">
+                        <i class="fas fa-sign-out-alt mr-2"></i>
+                        Logout
+                    </button>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="grid md:grid-cols-4 gap-8 mb-12">
+                    <div class="bg-white rounded-2xl p-8 modern-shadow">
+                        <div class="flex items-center">
+                            <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mr-6">
+                                <i class="fas fa-file-alt text-2xl text-white"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-3xl font-bold text-gray-800">47</h3>
+                                <p class="text-gray-600 font-medium">Total Requests</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl p-8 modern-shadow">
+                        <div class="flex items-center">
+                            <div class="w-16 h-16 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-2xl flex items-center justify-center mr-6">
+                                <i class="fas fa-clock text-2xl text-white"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-3xl font-bold text-gray-800">12</h3>
+                                <p class="text-gray-600 font-medium">Pending</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl p-8 modern-shadow">
+                        <div class="flex items-center">
+                            <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-teal-500 rounded-2xl flex items-center justify-center mr-6">
+                                <i class="fas fa-check-circle text-2xl text-white"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-3xl font-bold text-gray-800">35</h3>
+                                <p class="text-gray-600 font-medium">Completed</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl p-8 modern-shadow">
+                        <div class="flex items-center">
+                            <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mr-6">
+                                <i class="fas fa-users text-2xl text-white"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-3xl font-bold text-gray-800">289</h3>
+                                <p class="text-gray-600 font-medium">Total Users</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+                    <div class="border-b border-gray-200">
+                        <nav class="flex">
+                            <button onclick="showAdminTab('requests')" class="admin-tab-btn active px-8 py-4 font-semibold text-blue-600 border-b-2 border-blue-600">Service Requests</button>
+                            <button onclick="showAdminTab('qa')" class="admin-tab-btn px-8 py-4 font-semibold text-gray-600 hover:text-blue-600 transition">Q&A Management</button>
+                            <button onclick="showAdminTab('notifications')" class="admin-tab-btn px-8 py-4 font-semibold text-gray-600 hover:text-blue-600 transition">Notifications</button>
+                        </nav>
+                    </div>
+
+                    <!-- Service Requests Tab -->
+                    <div id="requestsTab" class="admin-tab-content active p-8">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-2xl font-bold text-gray-800">Recent Service Requests</h2>
+                        </div>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="border-b-2 border-gray-200">
+                                        <th class="text-left py-4 px-6 font-semibold text-gray-700">Name</th>
+                                        <th class="text-left py-4 px-6 font-semibold text-gray-700">Mobile</th>
+                                        <th class="text-left py-4 px-6 font-semibold text-gray-700">Service</th>
+                                        <th class="text-left py-4 px-6 font-semibold text-gray-700">Date</th>
+                                        <th class="text-left py-4 px-6 font-semibold text-gray-700">Status</th>
+                                        <th class="text-left py-4 px-6 font-semibold text-gray-700">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="requestsTable">
+                                    <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                        <td class="py-4 px-6 font-medium">Amit Kumar</td>
+                                        <td class="py-4 px-6">9876543210</td>
+                                        <td class="py-4 px-6">Aadhar Update</td>
+                                        <td class="py-4 px-6">2024-01-15</td>
+                                        <td class="py-4 px-6">
+                                            <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium">Pending</span>
+                                        </td>
+                                        <td class="py-4 px-6">
+                                            <button class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700 transition mr-2" onclick="markCompleted(this)">
+                                                Complete
+                                            </button>
+                                            <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition">
+                                                View Details
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                        <td class="py-4 px-6 font-medium">Priya Sharma</td>
+                                        <td class="py-4 px-6">9876543211</td>
+                                        <td class="py-4 px-6">PAN Card</td>
+                                        <td class="py-4 px-6">2024-01-14</td>
+                                        <td class="py-4 px-6">
+                                            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">Completed</span>
+                                        </td>
+                                        <td class="py-4 px-6">
+                                            <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition">
+                                                View Details
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Q&A Management Tab -->
+                    <div id="qaTab" class="admin-tab-content p-8">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-6">Q&A Management</h2>
+                        
+                        <div class="space-y-6">
+                            <div class="bg-gray-50 rounded-xl p-6">
+                                <div class="flex justify-between items-start mb-4">
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Rajesh Patel</h4>
+                                        <p class="text-sm text-gray-600">Mobile: 9876543212</p>
+                                        <p class="text-sm text-gray-500">1 day ago</p>
+                                    </div>
+                                    <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm">Unanswered</span>
+                                </div>
+                                <p class="text-gray-700 mb-4"><strong>Q:</strong> Can I apply for PM Kisan scheme online?</p>
+                                <div class="flex space-x-3">
+                                    <input type="text" placeholder="Type your answer..." class="flex-1 px-4 py-2 border border-gray-300 rounded-lg">
+                                    <button class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">Reply</button>
+                                </div>
+                            </div>
+
+                            <div class="bg-gray-50 rounded-xl p-6">
+                                <div class="flex justify-between items-start mb-4">
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Sunita Devi</h4>
+                                        <p class="text-sm text-gray-600">Mobile: 9876543213</p>
+                                        <p class="text-sm text-gray-500">2 days ago</p>
+                                    </div>
+                                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">Answered</span>
+                                </div>
+                                <p class="text-gray-700 mb-3"><strong>Q:</strong> What is the fee for passport application?</p>
+                                <div class="bg-green-50 p-3 rounded-lg">
+                                    <p class="text-green-800"><strong>Your Answer:</strong> The fee for fresh passport is ₹1,500 for normal processing and ₹3,500 for tatkal. We charge ₹100 service fee.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notifications Tab -->
+                    <div id="notificationsTab" class="admin-tab-content p-8">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-2xl font-bold text-gray-800">Manage Notifications</h2>
+                            <button onclick="showAddNotificationForm()" class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition">
+                                <i class="fas fa-plus mr-2"></i>
+                                Add Notification
+                            </button>
+                        </div>
+
+                        <!-- Add Notification Form -->
+                        <div id="addNotificationForm" class="hidden bg-blue-50 rounded-xl p-6 mb-8">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Add New Notification</h3>
+                            <form onsubmit="addNotification(event)">
+                                <div class="grid md:grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <label class="block text-gray-700 font-medium mb-2">Title</label>
+                                        <input type="text" id="notificationTitle" required class="w-full px-4 py-3 border border-gray-300 rounded-lg">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 font-medium mb-2">Type</label>
+                                        <select id="notificationType" class="w-full px-4 py-3 border border-gray-300 rounded-lg">
+                                            <option value="scheme">New Scheme</option>
+                                            <option value="update">Service Update</option>
+                                            <option value="program">Program</option>
+                                            <option value="general">General</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="block text-gray-700 font-medium mb-2">Message</label>
+                                    <textarea id="notificationMessage" required rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg"></textarea>
+                                </div>
+                                <div class="flex space-x-3">
+                                    <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition">Add Notification</button>
+                                    <button type="button" onclick="hideAddNotificationForm()" class="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700 transition">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Existing Notifications -->
+                        <div class="space-y-4">
+                            <div class="bg-white border border-gray-200 rounded-xl p-6">
+                                <div class="flex justify-between items-start">
+                                    <div class="flex-1">
+                                        <h4 class="font-semibold text-gray-800 mb-2">PM Vishwakarma Yojana Launch</h4>
+                                        <p class="text-gray-600 mb-2">New scheme for skill development and financial assistance now available.</p>
+                                        <span class="text-sm text-gray-500">Added 2 hours ago</span>
+                                    </div>
+                                    <div class="flex space-x-2">
+                                        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition">Edit</button>
+                                        <button class="bg-red-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-700 transition">Delete</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Global variables
+        let currentSlide = 0;
+        let currentReview = 0;
+        let currentLanguage = 'en';
+        let isLoggedIn = false;
+        let isAdmin = false;
+
+        // Page navigation
+        function showPage(pageId) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page-content');
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // Show selected page
+            const targetPage = document.getElementById(pageId + 'Page');
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+
+            // Update navigation active state
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Find and activate the corresponding nav link
+            const activeLink = document.querySelector(`[onclick="showPage('${pageId}')"]`);
+            if (activeLink && activeLink.classList.contains('nav-link')) {
+                activeLink.classList.add('active');
+            }
+
+            // Close mobile menu if open
+            const mobileMenu = document.getElementById('mobileMenu');
+            if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.add('hidden');
+            }
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('hidden');
+        }
+
+        // Notification functions
+        function showNotifications() {
+            const panel = document.getElementById('notificationPanel');
+            panel.classList.toggle('hidden');
+        }
+
+        // Close notification panel when clicking outside
+        document.addEventListener('click', function(event) {
+            const panel = document.getElementById('notificationPanel');
+            const button = document.getElementById('notificationBtn');
+            
+            if (!panel.contains(event.target) && !button.contains(event.target)) {
+                panel.classList.add('hidden');
+            }
+        });
+
+        // Photo slider functions
+        function nextSlide() {
+            const slider = document.getElementById('photoSlider');
+            const totalSlides = 4;
+            currentSlide = (currentSlide + 1) % totalSlides;
+            slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+            updateSlideDots();
+        }
+
+        function previousSlide() {
+            const slider = document.getElementById('photoSlider');
+            const totalSlides = 4;
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+            updateSlideDots();
+        }
+
+        function goToSlide(slideIndex) {
+            const slider = document.getElementById('photoSlider');
+            currentSlide = slideIndex;
+            slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+            updateSlideDots();
+        }
+
+        function updateSlideDots() {
+            const dots = document.querySelectorAll('.slide-dot');
+            dots.forEach((dot, index) => {
+                if (index === currentSlide) {
+                    dot.classList.remove('bg-white/50');
+                    dot.classList.add('bg-white');
+                } else {
+                    dot.classList.remove('bg-white');
+                    dot.classList.add('bg-white/50');
+                }
+            });
+        }
+
+        // Auto-advance slider
+        setInterval(nextSlide, 5000);
+
+        // Language switching
+        function changeLanguage() {
+            const selector = document.getElementById('languageSelector');
+            currentLanguage = selector.value;
+            
+            const elements = document.querySelectorAll('[data-en]');
+            elements.forEach(element => {
+                const text = element.getAttribute('data-' + currentLanguage);
+                if (text) {
+                    if (element.tagName === 'INPUT' && element.type === 'text') {
+                        element.placeholder = text;
+                    } else {
+                        element.textContent = text;
+                    }
+                }
+            });
+        }
+
+        // Form submissions
+        function submitRequest(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData);
+            
+            // Show success message
+            alert('Service request submitted successfully! We will contact you soon.');
+            
+            // Reset form
+            event.target.reset();
+            
+            // Show request status
+            const statusDiv = document.getElementById('requestStatus');
+            if (statusDiv) {
+                statusDiv.classList.remove('hidden');
+            }
+        }
+
+        function submitQuestion(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('questionName').value;
+            const mobile = document.getElementById('questionMobile').value;
+            const question = document.getElementById('questionText').value;
+            
+            // Add to Q&A list
+            const qaList = document.getElementById('qaList');
+            const newQuestion = document.createElement('div');
+            newQuestion.className = 'border-l-4 border-orange-500 pl-4';
+            newQuestion.innerHTML = `
+                <div class="flex items-center justify-between mb-2">
+                    <h4 class="font-semibold text-gray-800">${name}</h4>
+                    <span class="text-sm text-gray-500">Just now</span>
+                </div>
+                <p class="text-gray-600 mb-3"><strong>Q:</strong> ${question}</p>
+                <div class="bg-blue-50 p-3 rounded-lg">
+                    <p class="text-blue-800"><strong>Pending:</strong> Your question is being reviewed by our admin team.</p>
+                </div>
+            `;
+            
+            qaList.insertBefore(newQuestion, qaList.firstChild);
+            
+            // Show success message
+            alert('Question submitted successfully! We will respond soon.');
+            
+            // Reset form
+            event.target.reset();
+        }
+
+        function submitContact(event) {
+            event.preventDefault();
+            alert('Message sent successfully! We will get back to you soon.');
+            event.target.reset();
+        }
+
+        // Login functions
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Simple demo login
+            if (username && password) {
+                isLoggedIn = true;
+                alert('Login successful!');
+                showPage('home');
+            }
+        }
+
+        function handleRegister(event) {
+            event.preventDefault();
+            alert('Registration successful! Please login to continue.');
+            showPage('login');
+        }
+
+        function showAdminLogin() {
+            const username = prompt('Admin Username:');
+            const password = prompt('Admin Password:');
+            
+            if (username === 'admin' && password === 'admin123') {
+                isAdmin = true;
+                isLoggedIn = true;
+                showAdminDashboard();
+            } else {
+                alert('Invalid admin credentials!');
+            }
+        }
+
+        function showAdminDashboard() {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page-content');
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show admin dashboard
+            document.getElementById('adminDashboard').classList.add('active');
+        }
+
+        function logout() {
+            isLoggedIn = false;
+            isAdmin = false;
+            showPage('home');
+            alert('Logged out successfully!');
+        }
+
+        // Admin functions
+        function showAdminTab(tabName) {
+            // Hide all tab contents
+            const tabs = document.querySelectorAll('.admin-tab-content');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            
+            // Update tab buttons
+            const buttons = document.querySelectorAll('.admin-tab-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active', 'text-blue-600', 'border-blue-600');
+                btn.classList.add('text-gray-600');
+            });
+            
+            // Activate clicked button
+            event.target.classList.add('active', 'text-blue-600', 'border-blue-600');
+            event.target.classList.remove('text-gray-600');
+        }
+
+        function markCompleted(button) {
+            const row = button.closest('tr');
+            const statusCell = row.querySelector('span');
+            statusCell.className = 'bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium';
+            statusCell.textContent = 'Completed';
+            button.remove();
+        }
+
+        function showAddNotificationForm() {
+            document.getElementById('addNotificationForm').classList.remove('hidden');
+        }
+
+        function hideAddNotificationForm() {
+            document.getElementById('addNotificationForm').classList.add('hidden');
+        }
+
+        function addNotification(event) {
+            event.preventDefault();
+            
+            const title = document.getElementById('notificationTitle').value;
+            const message = document.getElementById('notificationMessage').value;
+            
+            alert('Notification added successfully!');
+            hideAddNotificationForm();
+            event.target.reset();
+        }
+
+        // Initialize the website
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show home page by default
+            showPage('home');
+            
+            // Set initial language
+            changeLanguage();
+            
+            // Initialize slider
+            updateSlideDots();
+        });
+
+        // Handle clicks outside elements to close dropdowns
+        document.addEventListener('click', function(event) {
+            // Close mobile menu when clicking outside
+            const mobileMenu = document.getElementById('mobileMenu');
+            const menuButton = event.target.closest('[onclick="toggleMobileMenu()"]');
+            
+            if (!mobileMenu.contains(event.target) && !menuButton && !mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.add('hidden');
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9679a98f23047f8f',t:'MTc1MzkyODkwNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
